@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const babylon = require('babylon');
 const traverse = require('babel-traverse').default;
+const babel = require('babel-core');
 
 let ID = 0;
 
@@ -21,10 +22,17 @@ function createAsset(filename) {
 
   const id = ID++;
 
+  const {code} = babel.transformFromAst(ast, null, {
+    presets: [
+        'env', // to make code run on every popular browser
+    ]
+  });
+
   return {
     id,
     filename,
-    dependencies
+    dependencies,
+    code
   }
 }
 
@@ -55,8 +63,27 @@ function createGraph(entry) {
   return queue;
 }
 
+function bundler(graph) {
+  let modules = '';
+
+  graph.forEach(mod => {
+    modules + `${mod.id}: [
+      
+    ]`;
+  });
+
+  const result = `
+    (function() {
+    })({${modules});
+  `;
+
+}
+
 const graph = createGraph('./example/entry.js');
-console.log('graph:', graph);
+// console.log('graphQueue:', graph);
+
+const bundle = bundler(graph);
+console.log('bundle:', bundle);
 
 // const mainAsset = createAsset('./example/entry.js');
 // console.log('mainAsset:', mainAsset);
