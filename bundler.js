@@ -36,14 +36,17 @@ function createAsset(filename) {
   }
 }
 
+// const mainAsset = createAsset('./example/entry.js');
+// console.log('mainAsset:', mainAsset);
+
 function createGraph(entry) {
   const mainAsset = createAsset(entry);
- console.log('mainAsset:', mainAsset);
+ // console.log('mainAsset:', mainAsset);
 
   const queue = [mainAsset];
 
   for(const asset of queue) {
-    console.log(`asset:`, asset);
+    // console.log(`asset:`, asset);
 
     const dirname = path.dirname(asset.filename);
 
@@ -67,9 +70,13 @@ function bundler(graph) {
   let modules = '';
 
   graph.forEach(mod => {
-    modules + `${mod.id}: [
-      
-    ]`;
+    modules +=
+    `${mod.id}: [
+      function(require, module, exports) { 
+        ${mod.code} 
+      }
+    ]
+    `;
   });
 
   const result = `
@@ -77,6 +84,7 @@ function bundler(graph) {
     })({${modules});
   `;
 
+  return result;
 }
 
 const graph = createGraph('./example/entry.js');
@@ -85,6 +93,5 @@ const graph = createGraph('./example/entry.js');
 const bundle = bundler(graph);
 console.log('bundle:', bundle);
 
-// const mainAsset = createAsset('./example/entry.js');
-// console.log('mainAsset:', mainAsset);
+
 
