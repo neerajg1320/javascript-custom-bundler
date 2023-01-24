@@ -18,4 +18,5 @@ node bundler.js |npx js-beautify | npx cli-highlight
 # For code transformation
 npm i -D babel-core babel-preset-env
 
-
+# In case we want to store it in file
+node bundler.js |npx js-beautify | npx cli-highlight >dist/entry.bundle.js
