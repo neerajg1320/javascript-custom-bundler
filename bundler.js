@@ -74,15 +74,31 @@ function bundler(graph) {
     `${mod.id}: [
       function(require, module, exports) { 
         ${mod.code} 
-      }
-    ]
+      },
+      ${JSON.stringify(mod.mapping)}
+    ],
     `;
   });
 
   const result = `
-    (function() {
-    })({${modules});
-  `;
+    (function(mapping) {
+      function require(id) {
+        const [modFn, childMap] = mapping[id];
+        
+        function localRequire(relativePath) {
+          return require(childMap[relativePath]);
+        }
+        
+        const module = { exports: {} };
+        
+        modFn(localRequire, module, module.exports);
+        
+        return module.exports;
+      }
+      
+      require(0);
+      
+    })({${modules}});`;
 
   return result;
 }
@@ -91,7 +107,7 @@ const graph = createGraph('./example/entry.js');
 // console.log('graphQueue:', graph);
 
 const bundle = bundler(graph);
-console.log('bundle:', bundle);
+console.log(bundle);
 
 
 
