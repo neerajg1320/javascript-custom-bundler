@@ -81,9 +81,13 @@ function bundler(graph) {
   });
 
   const result = `
-    (function(mapping) {
+    let moduleMap = {
+      ${modules}
+    };
+    
+    function moduleBundler(modMap) {
       function require(id) {
-        const [modFn, childMap] = mapping[id];
+        const [modFn, childMap] = modMap[id];
         
         function localRequire(relativePath) {
           return require(childMap[relativePath]);
@@ -91,14 +95,16 @@ function bundler(graph) {
         
         const module = { exports: {} };
         
+        // This executes the module code
         modFn(localRequire, module, module.exports);
         
         return module.exports;
       }
       
       require(0);
-      
-    })({${modules}});`;
+    }
+        
+    moduleBundler(moduleMap);`;
 
   return result;
 }
