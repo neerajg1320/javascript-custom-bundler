@@ -1,0 +1,20 @@
+{
+  "name": "custom-bundler",
+  "version": "1.0.0",
+  "description": "Our custom bundler is implemented in bundler.js",
+  "main": "bundler.js",
+  "scripts": {
+    "dev": "node bundler.js | js-beautify | highlight | tee out/result.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-traverse": "^6.26.0",
+    "babylon": "^6.18.0",
+    "cli-highlight": "^2.1.11",
+    "js-beautify": "^1.14.9"
+  }
+}
