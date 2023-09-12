@@ -113,6 +113,12 @@ function bundle(graph) {
       const module = {exports: {}};
 
       // This is where we are actually running module code
+      // Note a require in the user code will ensure that the require module 
+      // code is executed first and module.exports is populated with exports 
+      // from the required modules
+      // So in essence, even though there is only one copy of the code of required 
+      // module in bundler memory but the module code is executed each time it is 
+      // required by another module.
       fn(localRequire, module, module.exports);
 
       return module.exports;
